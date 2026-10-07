@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Arquitecturas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Simulador de Arquitecturas de Computadoras</h1>
+    </header>
+
+    <!-- Agrégalo justo después del </header> -->
+    <section id="diagrama-visual" class="modulo diagrama-container">
+        <!-- El diagrama físico se inyectará aquí con JavaScript -->
+        <h3 style="text-align: center; margin: 0; color: #64748b;">Selecciona una arquitectura para ver el diagrama de hardware</h3>
+    </section>
+
+    <main>
+        <section class="panel-control">
+            <div class="selector">
+                <label for="arquitecturaSelect">Arquitectura:</label>
+                <select id="arquitecturaSelect">
+                    <option value="VON_NEUMANN">Von Neumann</option>
+                    <option value="HARVARD">Harvard</option>
+                </select>
+            </div>
+            
+            <div class="botones">
+                <button id="btnIniciar" onclick="iniciarSimulador()">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653Z" /></svg>
+                    Iniciar
+                </button>
+                <button id="btnPaso" onclick="siguientePaso()" disabled>
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" /></svg>
+                    Siguiente Paso
+                </button>
+            </div>
+        </section>
+
+        <div class="contenedor-simulador">
+            <!-- Estado de la CPU -->
+            <section class="modulo cpu-card">
+                <h2>Unidad Central de Procesamiento (CPU)</h2>
+                <div class="registros">
+                    <div class="registro"><span>PC:</span> <span id="valPc">0</span></div>
+                    <div class="registro"><span>IR:</span> <span id="valIr">NOP</span></div>
+                    <div class="registro"><span>Acumulador:</span> <span id="valAcum">0</span></div>
+                </div>
+                <div class="metricas">
+                    <h3>Métricas de Rendimiento</h3>
+                    <p>Ciclos de Reloj: <strong id="valCiclos" class="highlight">0</strong></p>
+                </div>
+            </section>
+
+            <!-- Lienzo de Memoria -->
+            <section id="lienzoMemoria" class="modulo memoria-container">
+                <!-- Se inyecta por JS -->
+            </section>
+        </div>
+
+        <section class="log-operaciones">
+            <h2>Registro de Flujo de Datos</h2>
+            <ul id="listaLogs"></ul>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
