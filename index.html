@@ -11,20 +11,33 @@
         <h1>Simulador de Arquitecturas de Computadoras</h1>
     </header>
 
-    <!-- Agrégalo justo después del </header> -->
     <section id="diagrama-visual" class="modulo diagrama-container">
-        <!-- El diagrama físico se inyectará aquí con JavaScript -->
         <h3 style="text-align: center; margin: 0; color: #64748b;">Selecciona una arquitectura para ver el diagrama de hardware</h3>
     </section>
 
     <main>
         <section class="panel-control">
-            <div class="selector">
-                <label for="arquitecturaSelect">Arquitectura:</label>
-                <select id="arquitecturaSelect">
-                    <option value="VON_NEUMANN">Von Neumann</option>
-                    <option value="HARVARD">Harvard</option>
-                </select>
+            <div class="selector" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <label for="arquitecturaSelect">Arquitectura:</label>
+                    <select id="arquitecturaSelect">
+                        <option value="VON_NEUMANN">Von Neumann</option>
+                        <option value="HARVARD">Harvard</option>
+<!--                         <option value="HARVARD_MODIFICADA">Harvard Modificada</option> -->
+                    </select>
+                </div>
+                <div>
+                    <label for="modoSelect">Modo:</label>
+                    <select id="modoSelect">
+                        <option value="SEGMENTADO">Segmentado (Pipelining)</option>
+                        <option value="SECUENCIAL">Secuencial</option>
+                    </select>
+                </div>
+                
+                <div style="border-left: 2px solid #e2e8f0; padding-left: 15px; display: flex; gap: 10px;">
+                    <label>A: <input type="number" id="inputA" value="5" style="width: 60px; padding: 4px;"></label>
+                    <label>B: <input type="number" id="inputB" value="7" style="width: 60px; padding: 4px;"></label>
+                </div>
             </div>
             
             <div class="botones">
@@ -43,43 +56,56 @@
             <!-- Estado de la CPU -->
             <section class="modulo cpu-card">
                 <h2>Unidad Central de Procesamiento (CPU)</h2>
-                <div class="registros">
+                <div class="registros" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="registro"><span>PC:</span> <span id="valPc">0</span></div>
                     <div class="registro"><span>IR:</span> <span id="valIr">NOP</span></div>
-                    <div class="registro"><span>Acumulador:</span> <span id="valAcum">0</span></div>
+                    <div class="registro"><span>ACC:</span> <span id="valAcum">0</span></div>
+                    <div class="registro"><span>MAR:</span> <span id="valMar">0</span></div>
+                    <div class="registro"><span>MDR:</span> <span id="valMdr">0</span></div>
+                    <div class="registro" style="grid-column: span 2; display: flex; gap:10px; justify-content:center;">
+                        <span>Flags:</span>
+                        <span id="flagZ" class="flag">Z:0</span>
+                        <span id="flagN" class="flag">N:0</span>
+                        <span id="flagC" class="flag">C:0</span>
+                        <span id="flagV" class="flag">V:0</span>
+                    </div>
                 </div>
                 <div class="metricas">
-                    <h3>Métricas de Rendimiento</h3>
-                    <p>Ciclos de Reloj: <strong id="valCiclos" class="highlight">0</strong></p>
+                    <h3>Rendimiento (Modo <span id="txtModo" style="font-style:italic">N/A</span>)</h3>
+                    <p>Ciclos Totales: <strong id="valCiclos" class="highlight">0</strong></p>
+                    <p>CPI Acumulado: <strong id="valCpi" class="highlight-small">0.0</strong></p>
+                    <p>Pérdida por Bus: <strong id="valPerdida" class="highlight-small" style="color: #ef4444;">0</strong> ciclos</p>
+                </div>
+                <div id="statsCache" class="metricas" style="display: none; border-top: 1px solid #e2e8f0; margin-top: 10px; padding-top: 10px;">
+                    <h3>Estadísticas L1 Cache</h3>
+                    <p>Instrucciones (L1I) - Aciertos: <strong id="valL1iAc">0</strong> | Fallos: <strong id="valL1iFa">0</strong></p>
+                    <p>Datos (L1D) - Aciertos: <strong id="valL1dAc">0</strong> | Fallos: <strong id="valL1dFa">0</strong></p>
                 </div>
             </section>
 
             <!-- Lienzo de Memoria -->
             <section id="lienzoMemoria" class="modulo memoria-container">
-                <!-- Se inyecta por JS -->
             </section>
         </div>
 
         <section class="log-operaciones">
-            <h2>Registro de Flujo de Datos</h2>
+            <h2>Registro de Pipeline y Ejecución</h2>
             <ul id="listaLogs"></ul>
         </section>
     </main>
 
-    <footer>
-        <section class="log-operaciones footer">
-            <div class="integrantes">
-                <h2>Integrantes:</h2>
-                <ul>
-                    <li>Alessandro Becerra Montenegro</li>
-                    <li>Enzo Giovanny Becerra Montejo</li>
-                    <li>CARLOS XD</li>
-                </ul>
-            </div>
-            <div class="repo">
-                <h2><a href="#">Repositorio del Simulador</a></h2>
-            </div>
-        </section>
+    <footer class="footer">
+        <div class="integrantes">
+            <strong>Desarrollado por:</strong> Alessandro Becerra Montenegro, Enzo Becerra Montejo y Carlos Wilmer Martinez Cruz
+        </div>
+        <div class="repositorio">
+            <a href="https://github.com/aleslul/simulador-arquitectura-backend" target="_blank" rel="noopener noreferrer">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+                </svg>
+                Repositorio del Backend
+            </a>
+        </div>
     </footer>
 
     <script src="app.js"></script>

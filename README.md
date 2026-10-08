@@ -1,34 +1,38 @@
 # Simulador de Arquitecturas de Computadoras (Frontend)
 
-Este repositorio contiene la interfaz gráfica (Frontend) del simulador de arquitecturas clásicas de computadoras (Von Neumann y Harvard). Desarrollado de manera nativa con tecnologías web estándar, actúa como el cliente visual que consume la API REST provista por el backend en Spring Boot.
+Este repositorio contiene la interfaz gráfica interactiva (Frontend) del simulador de arquitecturas clásicas de computadoras. Construido nativamente con HTML5, CSS3 y Vanilla JavaScript, actúa como cliente visual consumiendo la API REST basada en sesiones provista por el backend en Spring Boot.
 
-Su objetivo principal es renderizar de manera interactiva y animada las diferencias en el flujo de datos y el consumo de ciclos de reloj entre ambas arquitecturas, cumpliendo con los estándares de diseño y análisis comparativo para sistemas de computación.
+Su objetivo principal es renderizar de manera interactiva las diferencias en el flujo de datos, manejo de recursos y ejecución de instrucciones entre arquitecturas computacionales, brindando herramientas de análisis de rendimiento precisas.
 
-## Características Principales
+## Arquitecturas y Modos Soportados
 
-* **Diagramas Físicos Animados:** Representación visual de los componentes (CPU, Memorias, Dispositivos de Entrada/Salida) en configuración de cruz. Utiliza la Web Animations API para simular el viaje físico de los paquetes de datos e instrucciones a través de los buses horizontales y verticales.
-* **Cuadrícula de Memoria Dinámica:** Renderizado en tiempo real del estado de los arreglos de memoria. Incluye resaltado visual automático de la celda actualmente referenciada por el Program Counter (PC).
-* **Monitor de CPU en Tiempo Real:** Visualización sincronizada de los registros internos de la Unidad de Control (PC, IR, Acumulador) y el contador global de Ciclos de Reloj.
-* **Registro de Operaciones (Log):** Historial detallado paso a paso que documenta la instrucción ejecutada y la explicación del consumo de ciclos (ej. cuellos de botella vs. accesos en paralelo).
+El frontend interactúa dinámicamente con el motor del simulador para representar tres arquitecturas:
+* **Von Neumann:** Un único bus de memoria. Representación visual de los cuellos de botella ("structural hazards").
+* **Harvard Pura:** Buses paralelos para Memoria de Instrucciones y Memoria de Datos.
 
-## Tecnologías Utilizadas
+**Modos de Ejecución:**
+* **Segmentado (Pipelining):** Solapamiento de las fases de Fetch y Execute.
+* **Secuencial:** Finalización estricta de una instrucción antes del Fetch de la siguiente.
 
-* **HTML5:** Estructura semántica del simulador.
-* **CSS3:** Maquetación responsiva utilizando CSS Grid y Flexbox. Variables de entorno para temas de color consistentes y clases dinámicas para indicadores de estado.
-* **JavaScript Puro (Vanilla JS):** Lógica del cliente, manipulación del DOM, peticiones asíncronas (`fetch`) a la API y orquestación de animaciones.
-* **Heroicons:** Iconografía vectorial integrada mediante SVG para los controles de la interfaz.
+## Características Principales de la Interfaz
+
+* **Animación Precisa de Pipeline:** Utiliza la Web Animations API para procesar el arreglo de `eventos` de fase (Fetch, Read, Write) devuelto por el backend. Los paquetes de datos se animan por los buses respetando los retrasos reales por colisión de recursos y tiempos de acceso a memoria.
+* **Métricas de Rendimiento Avanzadas:** Monitor en tiempo real de los registros de la Unidad de Control (PC, IR, ACC, MAR, MDR), banderas de estado (Z, N, C, V), CPI (Ciclos por Instrucción) y ciclos perdidos esperando liberación del bus.
+* **Cuadrícula de Memoria Desensamblada:** Renderizado visual de los arreglos de memoria que traduce automáticamente los códigos binarios de 16 bits a mnemónicos legibles en lenguaje ensamblador mediante el mapeo del motor.
+* **Manejo de Sesiones Concurrente:** Soporte para múltiples simulaciones simultáneas en diferentes pestañas mediante el manejo de `sessionId` (UUID).
 
 ## Estructura de Archivos
 
-* `index.html`: Punto de entrada de la aplicación. Define el panel de control, los contenedores del diagrama físico, las métricas de la CPU y la estructura de la memoria.
-* `styles.css`: Hojas de estilo que definen la presentación visual, las cajas de los componentes de hardware y la geometría de los buses de datos.
-* `app.js`: Script principal que maneja los eventos del usuario, se comunica con `http://localhost:8080/api/simulador` y ejecuta la lógica de renderizado y animación condicional basada en el tipo de arquitectura.
+* `index.html`: Define la estructura semántica de la interfaz, el panel de configuración de arquitecturas y variables (A y B), y los lienzos para los diagramas y métricas de CPU.
+* `styles.css`: Hojas de estilo que definen el diseño responsivo (CSS Grid y Flexbox) y la geometría posicional de los componentes físicos (CPU, RAM, Cachés, Buses).
+* `app.js`: Controlador principal del cliente. Gestiona las peticiones asíncronas (`fetch`) a la API, inyecta identificadores de sesión, mapea el DTO de estado y orquesta el motor visual de las esferas de datos según las fases temporales del hardware.
 
 ## Instrucciones de Ejecución
 
-Debido a que el frontend está construido enteramente en tecnologías del lado del cliente sin dependencias de Node.js, su ejecución es directa:
+Esta interfaz opera enteramente del lado del cliente sin requerir procesos de compilación o empaquetado (sin Node.js/Webpack).
 
-1. Asegúrese de que el servidor Backend (Spring Boot) se encuentre en ejecución y escuchando en el puerto `8080`.
-2. Abra el archivo `index.html` directamente en cualquier navegador web moderno (Google Chrome, Mozilla Firefox, Microsoft Edge).
-3. Seleccione la arquitectura deseada en el panel superior y haga clic en "Iniciar".
-4. Utilice el botón "Siguiente Paso" para avanzar en los ciclos de reloj y observar las animaciones del flujo de datos.
+1. Asegúrese de que el servidor Backend (Spring Boot) se encuentre en ejecución y escuchando peticiones en `http://localhost:8080`.
+2. Abra el archivo `index.html` en un navegador web moderno (se recomienda Google Chrome, Mozilla Firefox o Microsoft Edge).
+3. Seleccione la arquitectura, el modo de ejecución (Segmentado o Secuencial) y asigne los valores de prueba para los operandos A y B.
+4. Haga clic en **Iniciar** para instanciar una nueva sesión segura en el backend y poblar las memorias.
+5. Utilice el botón **Siguiente Paso** para enviar la petición de ejecución del ciclo de reloj, visualizando las métricas y animaciones correspondientes en pantalla.
