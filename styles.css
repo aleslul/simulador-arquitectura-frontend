@@ -243,3 +243,21 @@ button:disabled {
     color: #1e3a8a;
     text-decoration: underline;
 }
+
+.bus-horizontal {
+    height: 12px;
+    width: 60px;
+    background-color: #cbd5e1;
+    position: relative;
+    border-radius: 6px;
+}
+
+.paquete-h {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: -4px; /* Lo centra verticalmente en el bus horizontal */
+    box-shadow: 0 0 12px currentColor;
+    z-index: 3;
+}
