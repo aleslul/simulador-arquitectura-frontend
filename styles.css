@@ -1,0 +1,447 @@
+/* variables principales basadas en la paleta #ffffff #b1daf5 #435cda #2c3e75 y #f7daa9 */
+:root {
+    --blanco: #ffffff;
+    --celeste: #b1daf5;
+    --azul-real: #435cda;
+    --azul-marino: #2c3e75;
+    --crema: #f7daa9;
+    --fondo-suave: #edf6fc;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--fondo-suave);
+    color: var(--azul-marino);
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+    background-color: var(--azul-marino);
+    color: var(--blanco);
+    padding: 16px 20px;
+    border-radius: 10px;
+    border-bottom: 4px solid var(--crema);
+    box-shadow: 0 4px 10px rgba(44, 62, 117, 0.15);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.7em;
+}
+
+h2, h3 {
+    color: var(--azul-marino);
+}
+
+/* estilos para inputs y selectores con bordes de la paleta */
+select, input[type="number"] {
+    border: 2px solid var(--celeste);
+    border-radius: 6px;
+    padding: 6px 8px;
+    color: var(--azul-marino);
+    background-color: var(--blanco);
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+select:focus, input[type="number"]:focus {
+    border-color: var(--azul-real);
+}
+
+.divisor-operandos {
+    border-left: 2px solid var(--celeste);
+    padding-left: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.panel-control {
+    background: var(--blanco);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--celeste);
+    box-shadow: 0 3px 8px rgba(44, 62, 117, 0.08);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.panel-jerarquia {
+    margin-bottom: 20px;
+    background-color: var(--blanco) !important;
+    border-left: 6px solid var(--crema) !important;
+}
+
+.botones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* botones estilizados usando los tonos de la paleta */
+button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--azul-real);
+    color: var(--blanco);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+button:hover:not(:disabled) {
+    background-color: var(--azul-marino);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    background-color: var(--celeste) !important;
+    color: var(--azul-marino) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-exito {
+    background-color: var(--azul-marino);
+}
+
+.btn-exito:hover:not(:disabled) {
+    background-color: var(--azul-real);
+}
+
+.btn-neutro {
+    background-color: var(--celeste);
+    color: var(--azul-marino);
+}
+
+.btn-neutro:hover:not(:disabled) {
+    background-color: var(--azul-real);
+    color: var(--blanco);
+}
+
+.btn-morado {
+    background-color: var(--crema);
+    color: var(--azul-marino);
+}
+
+.btn-morado:hover:not(:disabled) {
+    background-color: var(--azul-marino);
+    color: var(--blanco);
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* disposicion en dos columnas alineadas arriba para evitar huecos en blanco */
+.contenedor-simulador {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: start;
+}
+
+/* apila la memoria principal arriba y el monitor de caches justo debajo en la columna derecha */
+.columna-derecha {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* distribuye L1I y L1D lado a lado y L2 abajo ocupando el ancho completo */
+.grid-niveles-cache {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.modulo {
+    background: var(--blanco);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--celeste);
+    box-shadow: 0 3px 8px rgba(44, 62, 117, 0.08);
+}
+
+.monitor-cache-card {
+    border-top: 4px solid var(--azul-real);
+}
+
+.registro {
+    background: var(--fondo-suave);
+    border: 1px solid var(--celeste);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-family: monospace;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.flag {
+    background: var(--crema);
+    color: var(--azul-marino);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.highlight {
+    color: var(--azul-real);
+    font-size: 1.5em;
+}
+
+.highlight-small {
+    color: var(--azul-real);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.badge-hr {
+    background-color: var(--crema);
+    color: var(--azul-marino);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.grid-memoria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.celda {
+    background: var(--fondo-suave);
+    border: 1px solid var(--celeste);
+    color: var(--azul-marino);
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.celda-activa {
+    background: var(--celeste);
+    border-color: var(--azul-real);
+    color: var(--azul-marino);
+}
+
+.celda-pc {
+    background-color: var(--crema) !important;
+    border: 2px solid var(--azul-real) !important;
+    color: var(--azul-marino) !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(67, 92, 218, 0.35);
+    z-index: 10;
+}
+
+.log-operaciones {
+    background: var(--blanco);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--celeste);
+    box-shadow: 0 3px 8px rgba(44, 62, 117, 0.08);
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.log-operaciones li {
+    padding: 8px;
+    border-bottom: 1px solid var(--celeste);
+    font-family: monospace;
+    font-size: 0.95em;
+}
+
+.diagrama-container {
+    margin-bottom: 20px;
+    background-color: var(--blanco);
+    border: 2px dashed var(--azul-real);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.diagrama-clasico {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.fila-diagrama {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.componente-fisico {
+    background: var(--blanco);
+    border: 3px solid var(--azul-marino);
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(44, 62, 117, 0.1);
+    min-width: 140px;
+    z-index: 2;
+}
+
+.bus-vertical {
+    width: 12px;
+    height: 42px;
+    background-color: var(--celeste);
+    position: relative;
+    border-radius: 6px;
+}
+
+.paquete-v {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    left: -4px;
+    box-shadow: 0 0 12px currentColor;
+    z-index: 3;
+}
+
+.bus-horizontal {
+    height: 12px;
+    width: 60px;
+    background-color: var(--celeste);
+    position: relative;
+    border-radius: 6px;
+}
+
+.paquete-h {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: -4px;
+    box-shadow: 0 0 12px currentColor;
+    z-index: 3;
+}
+
+.cache-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 34px;
+    padding: 8px;
+    background-color: var(--fondo-suave);
+    border-radius: 6px;
+    border: 1px dashed var(--azul-real);
+}
+
+.celda-cache {
+    background-color: var(--crema);
+    color: var(--azul-marino);
+    border: 1px solid var(--azul-marino);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(44, 62, 117, 0.15);
+    animation: popIn 0.3s ease-out forwards;
+}
+
+/* conserva el rojo para identificar visualmente al candidato a reemplazo como indica el titulo */
+.celda-cache:first-child {
+    background-color: #ef4444;
+    color: var(--blanco);
+    border-color: #b91c1c;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.tabla-comparativa {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 0.92em;
+}
+
+.tabla-comparativa th,
+.tabla-comparativa td {
+    border: 1px solid var(--celeste);
+    padding: 10px 12px;
+    text-align: center;
+}
+
+.tabla-comparativa th {
+    background-color: var(--azul-marino);
+    color: var(--blanco);
+    font-weight: 600;
+}
+
+.tabla-comparativa tr:nth-child(even) {
+    background-color: var(--fondo-suave);
+}
+
+.fila-destacada {
+    background-color: var(--crema) !important;
+    color: var(--azul-marino);
+    font-weight: 600;
+}
+
+.footer {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--azul-marino);
+    color: var(--blanco);
+    border-radius: 10px;
+    border-top: 4px solid var(--crema);
+    box-shadow: 0 3px 8px rgba(44, 62, 117, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer .integrantes {
+    color: var(--blanco);
+    font-size: 0.95em;
+}
+
+.footer .repositorio a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--crema);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.footer .repositorio a:hover {
+    color: var(--celeste);
+    text-decoration: underline;
+}

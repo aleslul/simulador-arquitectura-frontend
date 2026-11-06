@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Jerarquia de Memoria y Arquitecturas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Simulador de Sistemas y Jerarquia de Memoria</h1>
+    </header>
+
+    <!-- contenedor del diagrama interactivo de buses y memorias -->
+    <section id="diagrama-visual" class="modulo diagrama-container">
+        <h3 style="text-align: center; margin: 0; color: #2c3e75;">Selecciona una arquitectura y presiona Iniciar para ver el diagrama de hardware</h3>
+    </section>
+
+    <main>
+        <!-- barra principal de controles y botones de accion -->
+        <section class="panel-control">
+            <div class="selector" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <label for="arquitecturaSelect">Arquitectura:</label>
+                    <select id="arquitecturaSelect" onchange="toggleConfigCache()">
+                        <option value="HARVARD_MODIFICADA">Jerarquia de Memoria (Cache L1 + Cache L2 + RAM)</option>
+                        <option value="VON_NEUMANN">Von Neumann Clasica (Solo RAM)</option>
+                        <option value="HARVARD">Harvard Pura (Sin Cache)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="modoSelect">Modo:</label>
+                    <select id="modoSelect">
+                        <option value="SEGMENTADO">Segmentado</option>
+                        <option value="SECUENCIAL">Secuencial</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="programaSelect">Programa:</label>
+                    <select id="programaSelect">
+                        <option value="MULTIPLICACION">Multiplicacion A * B</option>
+                        <option value="SUMA">Suma A + B (Lineal)</option>
+                        <option value="AUTOMODIFICABLE">Codigo Automodificable</option>
+                    </select>
+                </div>
+                <div class="divisor-operandos">
+                    <label>A: <input type="number" id="inputA" value="3" style="width: 55px; padding: 4px;"></label>
+                    <label>B: <input type="number" id="inputB" value="4" style="width: 55px; padding: 4px;"></label>
+                </div>
+            </div>
+            
+            <div class="botones">
+                <button id="btnIniciar" onclick="iniciarSimulador()">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653Z" /></svg>
+                    Iniciar
+                </button>
+                <button id="btnPaso" onclick="siguientePaso()" disabled>
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" /></svg>
+                    Paso
+                </button>
+                <button id="btnEjecutarTodo" class="btn-exito" onclick="ejecutarTodo()" disabled>
+                    Ejecutar Todo
+                </button>
+                <button id="btnReset" class="btn-neutro" onclick="reiniciarSimulador()" disabled>
+                    Reiniciar
+                </button>
+                <button id="btnComparar" class="btn-morado" onclick="compararArquitecturas()">
+                    Comparar Arquitecturas
+                </button>
+            </div>
+        </section>
+
+        <!-- panel de parametros configurables de cache L1 L2 RAM y algoritmo de reemplazo -->
+        <section id="panelJerarquia" class="modulo panel-jerarquia">
+            <h3 style="margin-top: 0; color: #2c3e75;">Configuracion de Jerarquia de Memoria</h3>
+            <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
+                <label>Lineas L1 (I/D): <input type="number" id="cfgLineasCache" value="4" min="1" max="64" style="width: 55px; padding: 4px;"></label>
+                <label>Latencia L1: <input type="number" id="cfgLatenciaL1" value="1" min="1" max="20" style="width: 55px; padding: 4px;"> ciclos</label>
+                <label>Lineas L2: <input type="number" id="cfgLineasCacheL2" value="16" min="1" max="128" style="width: 55px; padding: 4px;"></label>
+                <label>Latencia L2: <input type="number" id="cfgLatenciaL2" value="2" min="1" max="30" style="width: 55px; padding: 4px;"> ciclos</label>
+                <label>Latencia RAM: <input type="number" id="cfgLatenciaRAM" value="6" min="1" max="50" style="width: 55px; padding: 4px;"> ciclos</label>
+                <label>Reemplazo: 
+                    <select id="cfgReemplazo">
+                        <option value="LRU">LRU (Least Recently Used)</option>
+                        <option value="FIFO">FIFO (First-In First-Out)</option>
+                    </select>
+                </label>
+            </div>
+        </section>
+
+        <!-- grilla central con CPU a la izquierda y Memoria mas Monitor de Caches a la derecha -->
+        <div class="contenedor-simulador">
+            <section class="modulo cpu-card">
+                <h2>Unidad Central de Procesamiento (CPU)</h2>
+                <div class="registros" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="registro"><span>PC:</span> <span id="valPc">0</span></div>
+                    <div class="registro"><span>IR:</span> <span id="valIr">NOP</span></div>
+                    <div class="registro"><span>ACC:</span> <span id="valAcum">0</span></div>
+                    <div class="registro"><span>MAR:</span> <span id="valMar">0</span></div>
+                    <div class="registro"><span>MDR:</span> <span id="valMdr">0</span></div>
+                    <div class="registro" style="grid-column: span 2; display: flex; gap:10px; justify-content:center; align-items:center;">
+                        <span>Flags:</span>
+                        <span id="flagZ" class="flag">Z:0</span>
+                        <span id="flagN" class="flag">N:0</span>
+                        <span id="flagC" class="flag">C:0</span>
+                        <span id="flagV" class="flag">V:0</span>
+                    </div>
+                </div>
+                <div class="metricas">
+                    <h3>Rendimiento (Modo <span id="txtModo" style="font-style:italic">N/A</span>)</h3>
+                    <p>Ciclos Totales: <strong id="valCiclos" class="highlight">0</strong></p>
+                    <p>Instrucciones Ejecutadas: <strong id="valInst" class="highlight-small">0</strong></p>
+                    <p>CPI Acumulado: <strong id="valCpi" class="highlight-small">0.0</strong></p>
+                    <p>Perdida por Contencion de Bus: <strong id="valPerdida" class="highlight-small" style="color: #2c3e75;">0</strong> ciclos</p>
+                </div>
+            </section>
+
+            <!-- columna derecha que agrupa las celdas de memoria arriba y el monitor de caches debajo -->
+            <div class="columna-derecha">
+                <section id="lienzoMemoria" class="modulo memoria-container">
+                </section>
+
+                <!-- monitor en vivo de los niveles de cache L1I L1D y L2 ubicado debajo de la memoria -->
+                <section id="statsCache" class="modulo monitor-cache-card" style="display: none;">
+                    <h3 id="tituloMonitorCache" style="margin-top: 0; margin-bottom: 12px;">Monitor de Caches L1 y L2 (Rojo = Proximo a reemplazo)</h3>
+                    
+                    <div class="grid-niveles-cache">
+                        <div>
+                            <p style="margin: 5px 0;">
+                                <strong>L1 Instrucciones (L1I)</strong> | Aciertos: <strong id="valL1iAc">0</strong> | Fallos: <strong id="valL1iFa">0</strong> | Hit Rate: <strong id="valL1iHr" class="badge-hr">0.0%</strong>
+                            </p>
+                            <div id="gridL1I" class="cache-grid"></div>
+                        </div>
+                        
+                        <div>
+                            <p style="margin: 5px 0;">
+                                <strong>L1 Datos (L1D)</strong> | Aciertos: <strong id="valL1dAc">0</strong> | Fallos: <strong id="valL1dFa">0</strong> | Hit Rate: <strong id="valL1dHr" class="badge-hr">0.0%</strong>
+                            </p>
+                            <div id="gridL1D" class="cache-grid"></div>
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <p style="margin: 5px 0;">
+                                <strong>L2 Unificada (Instrucciones y Datos)</strong> | Aciertos: <strong id="valL2Ac">0</strong> | Fallos: <strong id="valL2Fa">0</strong> | Hit Rate: <strong id="valL2Hr" class="badge-hr">0.0%</strong>
+                            </p>
+                            <div id="gridL2" class="cache-grid"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- tabla comparativa de rendimiento para el informe de la guia -->
+        <section id="seccionComparativa" class="modulo" style="display: none; margin-bottom: 20px;">
+            <h2 style="margin-top: 0;">Tabla Comparativa de Rendimiento entre Arquitecturas y Niveles de Cache</h2>
+            <p id="subtituloComparativa" style="color: #2c3e75; margin-top: -10px; font-size: 0.95em;"></p>
+            <div style="overflow-x: auto;">
+                <table class="tabla-comparativa">
+                    <thead>
+                        <tr>
+                            <th>Arquitectura</th>
+                            <th>Modo</th>
+                            <th>Instrucciones</th>
+                            <th>Ciclos Totales</th>
+                            <th>CPI</th>
+                            <th>Ciclos Espera Bus</th>
+                            <th>L1I (Hit / Miss / %)</th>
+                            <th>L1D (Hit / Miss / %)</th>
+                            <th>L2 Unificada (Hit / Miss / %)</th>
+                            <th>Speedup vs Von Neumann</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaComparativa"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- bitacora de eventos ciclo a ciclo -->
+        <section class="log-operaciones">
+            <h2>Registro de Pipeline y Jerarquia de Memoria</h2>
+            <ul id="listaLogs"></ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="integrantes">
+            <strong>Desarrollado por:</strong> Alessandro Becerra Montenegro, Enzo Becerra Montejo y Carlos Wilmer Martinez Cruz
+        </div>
+        <div class="repositorio">
+            <a href="https://github.com/aleslul/simulador-arquitectura-backend" target="_blank" rel="noopener noreferrer">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+                </svg>
+                Repositorio del Backend
+            </a>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
